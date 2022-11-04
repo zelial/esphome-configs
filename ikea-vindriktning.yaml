@@ -21,6 +21,10 @@ sensor:
     return {my_sensor};
   sensors:
     name: "IKEA vindriktning PM2.5 sensor"
+    filters:
+    - or:
+      - throttle_average: 300s
+      - delta: 10
 
 wifi:
   ssid: !secret wifi_ssid
