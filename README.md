@@ -16,4 +16,7 @@ might need to tweak (turn off) selinux to be able to read user home from inside 
 
 might need to adjust (chmod a+rwx /dev/ttyUSBXXX) permissions to device
 
-```podman run --rm --net=host -v "${PWD}":/config -it --device=/dev/ttyUSBXXX esphome/esphome run your-config.yaml```
+```podman run --rm --net=host -v "${PWD}":/config:Z -it --device=/dev/ttyUSBXXX esphome/esphome run your-config.yaml```
+
+# Sync local config dir with krapnik's for ESPHome WebUI
+rsync -avzP --delete  ./ root@krapnik.zelial.cz:/home/esphome/config/
