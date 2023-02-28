@@ -1,0 +1,113 @@
+esphome:
+  name: water-meter-hot
+
+esp32:
+  board: nodemcu-32s
+  # recommended for the BLE proxy but no compatible with webserver/prometheusa :(
+  #framework:
+  #  type: esp-idf
+  #  version: recommended
+
+bluetooth_proxy:
+  active: true
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+api:
+
+logger:
+
+ota:
+
+# To get data to Grafana (eventually)
+web_server:
+
+prometheus:
+
+# based on
+# https://www.pieterbrinkman.com/2022/02/02/build-a-cheap-water-usage-sensor-using-esphome-home-assistant-and-a-proximity-sensor/
+#sensor:
+#- platform: pulse_counter
+#  pin: GPIO16
+#  update_interval : 20s
+#  id: water_hot_pulse
+#  internal: true
+#
+#- platform: pulse_meter
+#  pin: GPIO16
+#  unit_of_measurement: "liter/min"
+#  id: water_hot_pulse_meter_2
+#  icon: "mdi:water"
+#  total:
+#    name: "Water Hot Meter Total"
+#    unit_of_measurement: "m³"
+#    id: water_hot_meter_total
+#    internal: false
+#    accuracy_decimals: 3
+#    device_class: water
+#    state_class: total_increasing
+#    filters:
+#      - multiply: 0.001
+
+#- platform: template
+#  name: "Water Hot Usage Liter"
+#  id: water_flow_rate
+#  accuracy_decimals: 1
+#  unit_of_measurement: "l/min"
+#  icon: "mdi:water"
+#  lambda: return (id(water_hot_pulse).state * 3);
+#  update_interval: 20s
+
+
+
+# old config
+sensor:
+  - platform: pulse_counter
+    pin: GPIO16
+    name: "Water Hot"
+    unit_of_measurement: "l/min"
+    id: water_hot_pulse_counter
+    icon: "mdi:water"
+    accuracy_decimals: 0
+    total:
+      name: 'Water Hot Total'
+      unit_of_measurement: "m³"
+      id: water_hot_total
+      accuracy_decimals: 3
+      device_class: water
+      state_class: total_increasing
+      filters:
+        - multiply: 0.001
+# for the LM35dz temp. sensor
+# unfortunately all my specimens were fake :( thanks aliexpress
+#  - platform: adc
+#    pin: GPIO33
+#    name: "Water Hot Meter Temperature"
+#    update_interval: 1s
+#    unit_of_measurement: "°C"
+#    device_class: "temperature"
+#    state_class: "measurement"
+#    accuracy_decimals: 1
+#    filters:
+#      - multiply: 100
+
+# OLED display for debugging
+#i2c:
+#  sda: GPIO21
+#  scl: GPIO22
+#
+#font:
+#  - file:
+#      type: gfonts
+#      family: Roboto
+#      weight: 900
+#    id: my_font
+#    size: 16
+#
+#display:
+#  - platform: ssd1306_i2c
+#    model: "SSD1306 128x32"
+#    lambda: |-
+#      it.printf(0, 0, id(my_font), "Pulse/min : %.0f", id(impulses).state);
